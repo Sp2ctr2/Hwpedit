@@ -23,7 +23,7 @@ target_link_libraries(hwpedit_core PUBLIC Qt6::Core Qt6::Gui Qt6::Xml ICU::uc IC
 target_compile_options(hwpedit_core PRIVATE -Wall -Wextra -Wpedantic)
 include(CTest)
 if(BUILD_TESTING)
-  foreach(name core package hwpx)
+  foreach(name core package hwpx table equation)
     add_executable(test-${name} tests/${name}.cpp)
     target_link_libraries(test-${name} PRIVATE hwpedit_core Qt6::Test)
     add_test(NAME ${name} COMMAND test-${name})
