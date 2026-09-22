@@ -1,0 +1,34 @@
+name: Provision development SDK
+on:
+  push:
+    paths: ['.github/workflows/bootstrap-sdk.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sdk:
+    runs-on: ubuntu-24.04
+    container: debian:13
+    timeout-minutes: 20
+    steps:
+      - name: Obtain signed distribution packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          apt-get update
+          mkdir -p /sdk/debs/partial
+          apt-get -y --download-only -o Dir::Cache::archives=/sdk/debs install \
+            qt6-base-dev qt6-svg-dev qt6-wayland qt6-image-formats-plugins \
+            libzip-dev libxml2-dev libicu-dev libharfbuzz-dev libfreetype-dev libfontconfig-dev \
+            weston fcitx5 fcitx5-hangul fcitx5-frontend-qt6 dbus-x11
+          find /sdk/debs -type f ! -name '*.deb' -delete
+          find /sdk/debs -name '*font*.deb' ! -name '*fontconfig*.deb' ! -name '*fontenc*.deb' ! -name '*xfont*.deb' -delete
+          cd /sdk
+          sha256sum debs/*.deb > SHA256SUMS
+          tar -czf /tmp/hwpedit-debian13-sdk.tar.gz debs SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hwpedit-debian13-sdk
+          path: /tmp/hwpedit-debian13-sdk.tar.gz
+          retention-days: 7
+          if-no-files-found: error
