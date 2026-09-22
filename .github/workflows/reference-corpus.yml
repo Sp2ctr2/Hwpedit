@@ -1,0 +1,13 @@
+name: Inspect pinned format fixtures
+on:
+  push:
+    paths: ['tools/fetch-fixtures.py', '.github/workflows/reference-corpus.yml']
+permissions:
+  contents: read
+jobs:
+  corpus:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/fetch-fixtures.py
