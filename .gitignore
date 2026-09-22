@@ -1,0 +1,11 @@
+/build*/
+/.deps/
+/.cache/
+/verification/local/
+*.user
+*.swp
+*.tmp
+*.AppImage
+*.deb
+*.pkg.tar.*
+__pycache__/

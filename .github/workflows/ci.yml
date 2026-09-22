@@ -1,0 +1,48 @@
+name: Native build and tests
+on:
+  push:
+    paths-ignore: ['docs/**', 'README.md', '.github/workflows/bootstrap-sdk.yml']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        sanitize: [false, true]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install toolchain
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y g++-14 cmake ninja-build qt6-base-dev qt6-svg-dev qt6-wayland libicu-dev libzip-dev libxml2-dev zlib1g-dev xvfb fonts-noto-cjk
+      - name: Configure
+        run: cmake -S . -B build -G Ninja -DCMAKE_CXX_COMPILER=g++-14 -DCMAKE_BUILD_TYPE=RelWithDebInfo -DHWPEDIT_SANITIZE=${{ matrix.sanitize && 'ON' || 'OFF' }}
+      - name: Build
+        run: cmake --build build --parallel 2
+      - name: Test
+        env:
+          QT_QPA_PLATFORM: offscreen
+          ASAN_OPTIONS: detect_leaks=0
+        run: ctest --test-dir build --output-on-failure --output-junit results.xml
+      - name: Archive source and binaries
+        if: matrix.sanitize == false
+        run: |
+          mkdir -p dist
+          git archive --format=tar.gz --prefix=hwp-editor/ HEAD > dist/hwpedit-source.tar.gz
+          tar -czf dist/hwpedit-linux-ubuntu24.tar.gz -C build bin
+          cp build/results.xml dist/
+          (cd dist && sha256sum *.tar.gz > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hwpedit-linux-sanitize-${{ matrix.sanitize }}
+          path: |
+            dist/
+            build/Testing/Temporary/LastTest.log
+            build/results.xml
+          retention-days: 14
