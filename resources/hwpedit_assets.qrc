@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="/hwpedit">
+    <file alias="blank.hwpx">Skeleton.hwpx</file>
+  </qresource>
+</RCC>

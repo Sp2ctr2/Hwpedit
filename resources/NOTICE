@@ -1,0 +1,12 @@
+Skeleton.hwpx is an unmodified blank package from python-hwpx.
+Copyright 2025-2026 airmang (Dr. Wily).
+Source: https://github.com/airmang/python-hwpx/blob/main/src/hwpx/data/Skeleton.hwpx
+Git blob: 9910eeb69abf7d9ad02edb9d616b589e79c553d7
+SHA-256: c91fb77a9933a3e5645a25778e2d2b99e98137ed99572a5d1dd29ef0c0fd4c98
+Licensed under the Apache License, Version 2.0; see LICENSES/Apache-2.0.txt.
+The package contains no bundled font program. It is a package-default template,
+not the document model or editing engine. HwpEdit replaces its body and writes
+model-owned content through the namespace-aware serializer.
+
+본 제품은 한컴의 HWP 문서 파일(.hwp) 공개 문서를 참고하여 개발하였습니다.
+HwpEdit is not a Hancom product and is not endorsed by Hancom.

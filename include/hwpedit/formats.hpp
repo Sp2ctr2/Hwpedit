@@ -1,6 +1,7 @@
 #pragma once
 #include <hwpedit/model.hpp>
 #include <QDomDocument>
+#include <QFileInfo>
 namespace he {
 Result<QMap<QString,QByteArray>> readZip(const QByteArray& bytes,const Limits& limits={});
 Result<QByteArray> writeZip(const QMap<QString,QByteArray>& parts);
